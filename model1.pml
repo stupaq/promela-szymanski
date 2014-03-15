@@ -110,19 +110,19 @@
 /* 17 */            goto start
 /* 18 */        }
 
-                #define Safe (in_cs <= 1)
-                ltl mutual_exclusion { [] Safe }
+                #define me_i (in_cs <= 1)
+                ltl mutual_exclusion { [] me_i }
 
-                #define Inevitablei(i) (true)
-                ltl inevitable_anteroom { [] ForallProcs(Inevitablei) }
+                #define ia_i(i) (!P[i]@critical_section U ((!P[i]@critical_section && (we[i] && !chce[i])) U P[i]@critical_section))
+                ltl inevitable_anteroom { [] ForallProcs(ia_i) }
 
-                #define Exitij(i, j) (we[i] && !chce[i] -> i != j && <> wy[j])
-                #define Exiti(i) (Exitij(i, 0) || Exitij(i, 1) || Exitij(i, 2) || Exitij(i, 3))
-                ltl exit_anteroom { [] ForallProcs(Exiti) }
+                #define ea_ij(i, j) (we[i] && !chce[i] -> i != j && <> wy[j])
+                #define ea_i(i) (ea_ij(i, 0) || ea_ij(i, 1) || ea_ij(i, 2) || ea_ij(i, 3))
+                ltl exit_anteroom { [] ForallProcs(ea_i) }
 
-                #define Alivei(i) ((P[i]@wait_entry) -> <> (P[i]@critical_section))
-                ltl liveness { [] ForallProcs(Alivei) }
+                #define l_i(i) ((P[i]@wait_entry) -> <> (P[i]@critical_section))
+                ltl liveness { [] ForallProcs(l_i) }
 
-                #define LagLimiti(i) (entry_lag[i] <= entry_lag_limit)
-                ltl linear_wait { [] ForallProcs(LagLimiti) }
+                #define lw_i(i) (entry_lag[i] <= entry_lag_limit)
+                ltl linear_wait { [] ForallProcs(lw_i) }
 

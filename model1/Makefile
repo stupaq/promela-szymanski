@@ -2,9 +2,7 @@
 
 MODEL=$(shell ls *.pml | head -1)
 
-check: ./pan
-	rm -f $(MODEL).trail
-	./pan -a -N
+all: pan
 
 log: $(MODEL) $(MODEL).trail
 	spin -t -p $(MODEL)

@@ -6,14 +6,14 @@
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
 
-                int in_cs;
+                byte in_cs;
                 bool waits[N];
-                int entry_lag[N];
+                byte entry_lag[N];
                 #define entry_lag_limit 2*N
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
-                    int k;
+                    byte k;
 
 /* 06 */        start:
                     /* SEKCJA LOKALNA */

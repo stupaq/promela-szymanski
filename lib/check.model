@@ -6,13 +6,13 @@
 rm -f *.pml.trail
 
 case $1 in
-  1) opts="-a -N mutual_exclusion" ;;
-  2) opts="-a -N inevitable_anteroom" ;;
-  3) opts="-a -N exit_anteroom" ;;
-  4) opts="-a -f -N liveness" ;;
-  5) opts="-a -N linear_wait" ;;
+  1) opts="-N mutual_exclusion" ;;
+  2) opts="-N inevitable_anteroom" ;;
+  3) opts="-N exit_anteroom" ;;
+  4) opts="-f -N liveness" ;;
+  5) opts="-N linear_wait" ;;
   *) exit 1 ;;
 esac
 
-./pan -m10000000 -w26 "$opts"
+./pan -m10000000 -w26 -n -a $opts
 

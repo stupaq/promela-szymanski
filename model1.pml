@@ -1,6 +1,7 @@
 /** @author Mateusz Machalica */
 
-                #define ForallProcs(p) (p(0) && p(1) && p(2) && p(3))
+                #define FOR_ALL_PROCS(p) (p(0) && p(1) && p(2) && p(3))
+                #define EXISTS_PROC_2(i, p) (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
 /* 01 */        #define N 4                           /* liczba procesow */
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
@@ -8,7 +9,7 @@
                 int in_cs;
                 bool waits[N];
                 int entry_lag[N];
-                #define entry_lag_limit 3*N
+                #define entry_lag_limit 2*N
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
@@ -110,19 +111,22 @@
 /* 17 */            goto start
 /* 18 */        }
 
-                #define me_i (in_cs <= 1)
-                ltl mutual_exclusion { [] me_i }
+                #define wants_in(i) (P[i]@wait_entry)
+                #define is_in(i) (P[i]@critical_section)
 
-                #define ia_i(i) (!P[i]@critical_section U ((!P[i]@critical_section && (we[i] && !chce[i])) U P[i]@critical_section))
-                ltl inevitable_anteroom { [] ForallProcs(ia_i) }
+                ltl mutual_exclusion { [] (in_cs <= 1) }
 
-                #define ea_ij(i, j) (we[i] && !chce[i] -> i != j && <> wy[j])
-                #define ea_i(i) (ea_ij(i, 0) || ea_ij(i, 1) || ea_ij(i, 2) || ea_ij(i, 3))
-                ltl exit_anteroom { [] ForallProcs(ea_i) }
+                #define always_enters(i) \
+                    (wants_in(i) -> (!is_in(i) U ((!is_in(i) && (we[i] && !chce[i])) U (!is_in(i) U is_in(i)))))
+                ltl inevitable_anteroom { [] FOR_ALL_PROCS(always_enters) }
 
-                #define l_i(i) ((P[i]@wait_entry) -> <> (P[i]@critical_section))
-                ltl liveness { [] ForallProcs(l_i) }
+                #define i_lets_j_in(i, j) (we[i] && !chce[i] -> i != j && <> wy[j])
+                #define lets_someone_in(i) (EXISTS_PROC_2(i, i_lets_j_in))
+                ltl exit_anteroom { [] FOR_ALL_PROCS(lets_someone_in) }
 
-                #define lw_i(i) (entry_lag[i] <= entry_lag_limit)
-                ltl linear_wait { [] ForallProcs(lw_i) }
+                #define process_alive(i) (wants_in(i) -> <> is_in(i))
+                ltl liveness { [] FOR_ALL_PROCS(process_alive) }
+
+                #define limited_lag(i) (entry_lag[i] <= entry_lag_limit)
+                ltl linear_wait { [] FOR_ALL_PROCS(limited_lag) }
 

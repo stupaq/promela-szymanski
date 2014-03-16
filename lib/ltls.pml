@@ -1,4 +1,6 @@
 
+#define entry_lag_limit 2*N
+
 #define wants_in(i) (P[i]@wait_entry)
 #define is_in(i) (P[i]@critical_section)
 

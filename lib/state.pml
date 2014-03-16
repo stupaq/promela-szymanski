@@ -2,7 +2,6 @@
 byte in_cs;
 bool waits[N];
 byte entry_lag[N];
-#define entry_lag_limit 2*N
 
 inline mark_start_waiting(i) {
     waits[i] = true;

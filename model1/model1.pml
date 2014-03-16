@@ -9,6 +9,35 @@
 
 #include "../lib/state.pml"
 
+                inline possibly_block() {
+                    if
+                      :: skip
+                      :: true ->
+                        end:
+                            false
+                    fi;
+                }
+
+                inline wait_forall(k, s, e, p) {
+                    assert (s <= e);
+                    k = s;
+                    do
+                      :: k >= e -> break
+                      :: k < e && (p) -> k++
+                      :: else -> (p); k = s;
+                    od;
+                }
+
+                inline check_exists(k, s, e, p) {
+                    assert (s <= e);
+                    k = s;
+                    do
+                      :: k >= e -> break
+                      :: k < e && (p) -> break
+                      :: else -> k++
+                    od;
+                }
+
 /* 04 */        active [N] proctype P()
 /* 05 */        {
                     byte k;
@@ -16,12 +45,7 @@
 /* 06 */        start:
                     /* SEKCJA LOKALNA */
 
-                    if
-                      :: skip
-                      :: true ->
-                        end:
-                            false
-                    fi;
+                    possibly_block();
 
                     /* PROLOG */
 
@@ -31,21 +55,11 @@
                         mark_start_waiting(i);
                     }
 
-                    k = 0;
-                    do
-                      :: k >= N -> break
-                      :: k < N && !(chce[k] && we[k]) -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, 0, N, !(chce[k] && we[k]));
 
 /* 08 */            we[i] = true;
 
-                    k = 0;
-                    do
-                      :: k >= N -> break
-                      :: k < N && (chce[k] && !we[k]) -> break
-                      :: else -> k++
-                    od;
+                    check_exists(k, 0, N, (chce[k] && !we[k]));
 
                     if
                       :: k < N ->
@@ -65,19 +79,9 @@
 
 /* 13 */            wy[i] = true;
 
-                    k = i + 1;
-                    do
-                      :: k >= N -> break
-                      :: k < N && (!we[k] || wy[k]) -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, i + 1, N, (!we[k] || wy[k]));
 
-                    k = 0;
-                    do
-                      :: k >= i -> break
-                      :: k < i && !we[k] -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, 0, i, !we[k]);
 
                     /* SEKCJA KRYTYCZNA */
 

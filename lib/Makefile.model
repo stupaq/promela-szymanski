@@ -1,14 +1,13 @@
 # @author Mateusz Machalica
 
 MODEL ?= $(shell ls *.pml | head -1)
-
-all: pan
-
-pan.c: $(MODEL) ../lib/state.pml ../lib/ltls.pml
-	spin -a $(MODEL)
+LIBS := $(wildcard ../lib/*.pml)
 
 pan: pan.c
 	gcc -O2 -o pan pan.c
+
+pan.c: $(MODEL) $(LIBS)
+	spin -a $(MODEL)
 
 clean:
 	rm -f _spin_nvr.tmp pan pan.* $(MODEL).trail

@@ -10,21 +10,19 @@ inline possibly_block() {
 }
 
 inline wait_forall(k, s, e, p) {
-  assert (s <= e);
-  k = s;
+  k = (s);
   do
-    :: k >= e -> break
-    :: k < e && (p) -> k++
-    :: else -> (p); k = s;
+    :: k >= (e) -> break
+    :: k < (e) && (p) -> k++
+    :: else -> (p); k = (s);
   od;
 }
 
 inline check_exists(k, s, e, p) {
-  assert (s <= e);
-  k = s;
+  k = (s);
   do
-    :: k >= e -> break
-    :: k < e && (p) -> break
+    :: k >= (e) -> break
+    :: k < (e) && (p) -> break
     :: else -> k++
   od;
 }

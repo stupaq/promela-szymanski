@@ -8,7 +8,7 @@
 #define is_in_cs(i)             (P[i]@critical_section)
 
 #define are_both_in_cs(i, j)    (i != j && is_in_cs(i) && is_in_cs(j))
-#define is_alone_in_cs(i)       (! EXISTS_PROC_2(i, are_both_in_cs)))
+#define is_alone_in_cs(i)       (! EXISTS_PROC_2(i, are_both_in_cs))
 ltl mutual_exclusion { [] FOR_ALL_PROCS(is_alone_in_cs) }
 
 #define is_in_anteroom(i)       (we[i] && !chce[i])

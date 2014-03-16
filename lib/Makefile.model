@@ -7,7 +7,7 @@ all: pan
 log: $(MODEL) $(MODEL).trail
 	spin -t -p $(MODEL)
 
-pan.c: $(MODEL)
+pan.c: $(MODEL) ../lib/state.pml ../lib/ltls.pml
 	spin -a $(MODEL)
 
 pan: pan.c

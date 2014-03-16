@@ -1,15 +1,13 @@
 /** @author Mateusz Machalica */
 
                 #define FOR_ALL_PROCS(p) (p(0) && p(1) && p(2) && p(3))
+                #define EXISTS_PROC(p) (p(0) || p(1) || p(2) || p(3))
                 #define EXISTS_PROC_2(i, p) (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
 /* 01 */        #define N 4                           /* liczba procesow */
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
 
-                byte in_cs;
-                bool waits[N];
-                byte entry_lag[N];
-                #define entry_lag_limit 2*N
+#include "../lib/state.pml"
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
@@ -28,9 +26,9 @@
                     /* PROLOG */
 
                 wait_entry:
-                    atomic {
+                    d_step {
 /* 07 */            chce[i] = true;
-                        waits[i] = true;
+                        mark_start_waiting(i);
                     }
 
                     k = 0;
@@ -84,23 +82,9 @@
                     /* SEKCJA KRYTYCZNA */
 
                 critical_section:
-                    atomic {
-                        in_cs++;
-                        waits[i] = false;
-                        entry_lag[i] = 0;
-                        k = 0;
-                        do
-                          :: k >= N -> break
-                          :: k < N && waits[k] -> entry_lag[k]++; k++
-                          :: else -> k++
-                        od
-                    }
-
+                    mark_cs_entry(i);
                     /* ... */
-
-                    atomic {
-                        in_cs--;
-                    }
+                    mark_cs_exit(i);
 
                     /* EPILOG */
 
@@ -111,22 +95,5 @@
 /* 17 */            goto start
 /* 18 */        }
 
-                #define wants_in(i) (P[i]@wait_entry)
-                #define is_in(i) (P[i]@critical_section)
-
-                ltl mutual_exclusion { [] (in_cs <= 1) }
-
-                #define always_enters(i) \
-                    (wants_in(i) -> (!is_in(i) U ((!is_in(i) && (we[i] && !chce[i])) U (!is_in(i) U is_in(i)))))
-                ltl inevitable_anteroom { [] FOR_ALL_PROCS(always_enters) }
-
-                #define i_lets_j_in(i, j) (we[i] && !chce[i] -> i != j && <> wy[j])
-                #define lets_someone_in(i) (EXISTS_PROC_2(i, i_lets_j_in))
-                ltl exit_anteroom { [] FOR_ALL_PROCS(lets_someone_in) }
-
-                #define process_alive(i) (wants_in(i) -> <> is_in(i))
-                ltl liveness { [] FOR_ALL_PROCS(process_alive) }
-
-                #define limited_lag(i) (entry_lag[i] <= entry_lag_limit)
-                ltl linear_wait { [] FOR_ALL_PROCS(limited_lag) }
+#include "../lib/ltls.pml"
 

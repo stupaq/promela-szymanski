@@ -1,8 +1,6 @@
 /** @author Mateusz Machalica */
 
-                #define FOR_ALL_PROCS(p) (p(0) && p(1) && p(2) && p(3))
-                #define EXISTS_PROC(p) (p(0) || p(1) || p(2) || p(3))
-                #define EXISTS_PROC_2(i, p) (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
+                /* Whenever you change N, you must also modify LTL macros. */
 /* 01 */        #define N 4                           /* liczba procesow */
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
@@ -57,8 +55,7 @@
 
                 critical_section:
                     mark_cs_entry(i);
-                    /* ... */
-                    mark_cs_exit(i);
+                    skip
 
                     /* EPILOG */
 

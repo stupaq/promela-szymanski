@@ -7,36 +7,8 @@
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
 
-#include "../lib/state.pml"
-
-                inline possibly_block() {
-                    if
-                      :: skip
-                      :: true ->
-                        end:
-                            false
-                    fi;
-                }
-
-                inline wait_forall(k, s, e, p) {
-                    assert (s <= e);
-                    k = s;
-                    do
-                      :: k >= e -> break
-                      :: k < e && (p) -> k++
-                      :: else -> (p); k = s;
-                    od;
-                }
-
-                inline check_exists(k, s, e, p) {
-                    assert (s <= e);
-                    k = s;
-                    do
-                      :: k >= e -> break
-                      :: k < e && (p) -> break
-                      :: else -> k++
-                    od;
-                }
+#include "../lib/history.pml"
+#include "../lib/commons.pml"
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
@@ -59,6 +31,7 @@
 
 /* 08 */            we[i] = true;
 
+                anteroom_check:
                     check_exists(k, 0, N, (chce[k] && !we[k]));
 
                     if

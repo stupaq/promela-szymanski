@@ -7,7 +7,8 @@
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
 
-#include "../lib/state.pml"
+#include "../lib/history.pml"
+#include "../lib/commons.pml"
 
                 /* Note that to check for all possible scenarios it makes sense to attempt to fail in a given state only
                 * once, since after failure all local decisions are forgotten. That being said it is sufficient to try
@@ -22,12 +23,7 @@
                             wy[i] = false;
                         }
 
-                        k = 0;
-                        do
-                          :: k >= N -> break
-                          :: k < N && (!we[k] || wy[k]) -> k++
-                          :: else -> k = 0;
-                        od;
+                        wait_forall(k, 0, N, (!we[k] || wy[k]));
 
                         goto start
                     fi
@@ -40,12 +36,7 @@
 /* 06 */        start:
                     /* SEKCJA LOKALNA */
 
-                    if
-                      :: skip
-                      :: true ->
-                        end:
-                            false
-                    fi;
+                    possibly_block();
 
                     /* PROLOG */
 
@@ -56,23 +47,13 @@
                     }
                     possibly_fail();
 
-                    k = 0;
-                    do
-                      :: k >= N -> break
-                      :: k < N && !(chce[k] && we[k]) -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, 0, N, !(chce[k] && we[k]));
 
 /* 08 */            we[i] = true;
                     possibly_fail();
 
                 anteroom_check:
-                    k = 0;
-                    do
-                      :: k >= N -> break
-                      :: k < N && (chce[k] && !we[k]) -> break
-                      :: else -> k++
-                    od;
+                    check_exists(k, 0, N, (chce[k] && !we[k]));
 
                     if
                       :: k < N ->
@@ -88,7 +69,6 @@
 
 /* 11 */                    chce[i] = true;
                             possibly_fail();
-
 /* 12 */                }
                       :: else
                     fi;
@@ -96,19 +76,9 @@
 /* 13 */            wy[i] = true;
                     possibly_fail();
 
-                    k = i + 1;
-                    do
-                      :: k >= N -> break
-                      :: k < N && (!we[k] || wy[k]) -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, i + 1, N, (!we[k] || wy[k]));
 
-                    k = 0;
-                    do
-                      :: k >= i -> break
-                      :: k < i && !we[k] -> k++
-                      :: else -> k = 0;
-                    od;
+                    wait_forall(k, 0, i, !we[k]);
 
                     /* SEKCJA KRYTYCZNA */
 
@@ -124,7 +94,7 @@
 /* 15 */            we[i] = false;
                     possibly_fail();
 /* 16 */            chce[i] = false;
-                    //possibly_fail(); /* Completely redundant. */
+                    //possibly_fail(); /* Redundant therefore removed. */
 
 /* 17 */            goto start
 /* 18 */        }

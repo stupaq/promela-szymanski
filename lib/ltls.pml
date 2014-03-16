@@ -1,3 +1,4 @@
+/** @author Mateusz Machalica */
 
 #define entry_lag_limit 2*N
 

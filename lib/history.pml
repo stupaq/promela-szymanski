@@ -1,3 +1,4 @@
+/** @author Mateusz Machalica */
 
 byte in_cs;
 bool waits[N];

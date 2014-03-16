@@ -41,10 +41,7 @@
                     /* PROLOG */
 
                 wait_entry:
-                    d_step {
 /* 07 */            chce[i] = true;
-                        mark_start_waiting(i);
-                    }
                     possibly_fail();
 
                     wait_forall(k, 0, N, !(chce[k] && we[k]));

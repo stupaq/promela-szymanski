@@ -1,22 +1,16 @@
 /** @author Mateusz Machalica */
 
 byte in_cs;
-bool waits[N];
 byte entry_lag[N];
-
-inline mark_start_waiting(i) {
-    waits[i] = true;
-}
 
 inline mark_cs_entry(i) {
     d_step {
         in_cs++;
-        waits[i] = false;
         entry_lag[i] = 0;
         k = 0;
         do
           :: k >= N -> break
-          :: k < N && waits[k] -> entry_lag[k]++; k++
+          :: k < N && (chce[k] || we[k] || wy[k]) -> entry_lag[k]++; k++
           :: else -> k++
         od
     }

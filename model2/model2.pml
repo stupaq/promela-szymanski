@@ -61,7 +61,7 @@
                             if
                               :: k == N -> goto anteroom_check
                               :: else
-                            fi
+                            fi;
 
 /* 11 */                    chce[i] = true;
                             possibly_fail();

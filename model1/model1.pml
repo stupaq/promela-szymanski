@@ -35,6 +35,7 @@
                     do
                       :: k >= N -> break
                       :: k < N && !(chce[k] && we[k]) -> k++
+                      :: else -> k = 0;
                     od;
 
 /* 08 */            we[i] = true;
@@ -68,12 +69,14 @@
                     do
                       :: k >= N -> break
                       :: k < N && (!we[k] || wy[k]) -> k++
+                      :: else -> k = 0;
                     od;
 
                     k = 0;
                     do
                       :: k >= i -> break
                       :: k < i && !we[k] -> k++
+                      :: else -> k = 0;
                     od;
 
                     /* SEKCJA KRYTYCZNA */

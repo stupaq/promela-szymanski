@@ -15,12 +15,21 @@
                 inline possibly_fail() {
                     if
                       :: skip
-                      :: true -> atomic {
+                      :: true ->
+                        d_step {
                             chce[i] = false;
                             we[i] = false;
                             wy[i] = false;
-                            goto start
                         }
+
+                        k = 0;
+                        do
+                          :: k >= N -> break
+                          :: k < N && (!we[k] || wy[k]) -> k++
+                          :: else -> k = 0;
+                        od;
+
+                        goto start
                     fi
                 }
 
@@ -51,11 +60,13 @@
                     do
                       :: k >= N -> break
                       :: k < N && !(chce[k] && we[k]) -> k++
+                      :: else -> k = 0;
                     od;
 
 /* 08 */            we[i] = true;
                     possibly_fail();
 
+                anteroom_check:
                     k = 0;
                     do
                       :: k >= N -> break
@@ -89,12 +100,14 @@
                     do
                       :: k >= N -> break
                       :: k < N && (!we[k] || wy[k]) -> k++
+                      :: else -> k = 0;
                     od;
 
                     k = 0;
                     do
                       :: k >= i -> break
                       :: k < i && !we[k] -> k++
+                      :: else -> k = 0;
                     od;
 
                     /* SEKCJA KRYTYCZNA */

@@ -55,7 +55,6 @@
 
                 critical_section:
                     mark_cs_entry(i);
-                    skip
 
                     /* EPILOG */
 

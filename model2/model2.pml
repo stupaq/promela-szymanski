@@ -61,11 +61,11 @@
 /* 10 */                    chce[i] = false;
                             possibly_fail();
 
-                            k = 0;
-                            do
-                              :: wy[k] -> break
-                              :: else -> k = (k + 1) % N
-                            od;
+                            check_exists(k, 0, N, (wy[k] || !(!chce[k] || we[k])));
+                            if
+                              :: k == N -> goto anteroom_check
+                              :: else
+                            fi
 
 /* 11 */                    chce[i] = true;
                             possibly_fail();

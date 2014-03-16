@@ -14,3 +14,7 @@ inline mark_cs_entry(i) {
     }
 }
 
+inline mark_failure(i) {
+    entry_lag[i] = 0;
+}
+

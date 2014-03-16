@@ -1,6 +1,6 @@
 /** @author Mateusz Machalica */
 
-                /* Whenever you change N, you must also modify LTL macros. */
+                /* Whenever you change N, you must also modify LTL metamacros. */
 /* 01 */        #define N 4                           /* liczba procesow */
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
@@ -8,9 +8,9 @@
 #include "../lib/history.pml"
 #include "../lib/commons.pml"
 
-                /* Note that to check for all possible scenarios it makes sense to attempt to fail in a given state only
-                * once, since after failure all local decisions are forgotten. That being said it is sufficient to try
-                * to fail after each assignment to any global variable. */
+                /* We model failures in such a way, that entire local state (local variables & instruction pointer) are
+                 * lost, therefore to cover all possible scenarios we can nondeterministically fail after each
+                 * modification of the global state only. */
                 inline possibly_fail() {
                     if
                       :: skip
@@ -19,6 +19,7 @@
                             chce[i] = false;
                             we[i] = false;
                             wy[i] = false;
+                            mark_failure(i);
                         }
 
                         wait_forall(k, 0, N, (!we[k] || wy[k]));

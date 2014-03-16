@@ -1,6 +1,6 @@
 /** @author Mateusz Machalica */
 
-                /* Whenever you change N, you must also modify LTL macros. */
+                /* Whenever you change N, you must also modify LTL metamacros. */
 /* 01 */        #define N 4                           /* liczba procesow */
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid

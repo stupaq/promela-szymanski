@@ -2,8 +2,6 @@
 
 /* These metamacros must be modified whenever you change N. */
 #define FOR_ALL_PROCS(p)        (p(0) && p(1) && p(2) && p(3))
-#define FOR_ALL_PROCS_2(i, p)   (p(i, 0) && p(i, 1) && p(i, 2) && p(i, 3))
-#define EXISTS_PROC(p)          (p(0) || p(1) || p(2) || p(3))
 #define EXISTS_PROC_2(i, p)     (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
 
 #define wants_cs(i)             (P[i]@wait_entry)
@@ -14,8 +12,9 @@
 ltl mutual_exclusion { [] FOR_ALL_PROCS(is_alone_in_cs) }
 
 #define is_in_anteroom(i)       (we[i] && !chce[i])
-#define skips_anteroom(i)       (<> (wants_cs(i) U (!is_in_anteroom(i) U is_in_cs(i))))
-ltl inevitable_anteroom { ! EXISTS_PROC(skips_anteroom) }
+#define not_skip_anteroom(i)    ([] !(wants_cs(i) U (!is_in_anteroom(i) U is_in_cs(i))))
+/* Note that [] and \forall are commutative, so that all claims have the invariant form. */
+ltl inevitable_anteroom { FOR_ALL_PROCS(not_skip_anteroom) }
 
 #define i_lets_j_cs(i, j)       (is_in_anteroom(i) -> i != j && <> wy[j])
 #define lets_someone_cs(i)      (EXISTS_PROC_2(i, i_lets_j_cs))

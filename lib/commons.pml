@@ -1,3 +1,4 @@
+/** @author Mateusz Machalica */
 
 inline possibly_block() {
   if

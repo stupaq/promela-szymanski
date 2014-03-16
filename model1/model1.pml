@@ -34,7 +34,6 @@
 /* 09 */                {
 /* 10 */                    chce[i] = false;
 
-                            k = 0;
                             do
                               :: wy[k] -> break
                               :: else -> k = (k + 1) % N

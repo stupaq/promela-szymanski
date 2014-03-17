@@ -57,9 +57,36 @@
 
                     /* EPILOG */
 
+#ifdef EPILOG_321
 /* 14 */            wy[i] = false;
 /* 15 */            we[i] = false;
 /* 16 */            chce[i] = false;
+#endif
+#ifdef EPILOG_312
+                    wy[i] = false;
+                    chce[i] = false;
+                    we[i] = false;
+#endif
+#ifdef EPILOG_231
+                    we[i] = false;
+                    wy[i] = false;
+                    chce[i] = false;
+#endif
+#ifdef EPILOG_213
+                    we[i] = false;
+                    chce[i] = false;
+                    wy[i] = false;
+#endif
+#ifdef EPILOG_132
+                    chce[i] = false;
+                    wy[i] = false;
+                    we[i] = false;
+#endif
+#ifdef EPILOG_123
+                    chce[i] = false;
+                    we[i] = false;
+                    wy[i] = false;
+#endif
 
 /* 17 */            goto start
 /* 18 */        }

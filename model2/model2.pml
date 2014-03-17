@@ -15,16 +15,18 @@
                     if
                       :: skip
                       :: true ->
-                        d_step {
-                            chce[i] = false;
-                            we[i] = false;
-                            wy[i] = false;
-                            mark_failure(i);
+                        {
+                            d_step {
+                                chce[i] = false;
+                                we[i] = false;
+                                wy[i] = false;
+                                mark_failure(i);
+                            }
+
+                            wait_forall(k, 0, N, (!we[k] || wy[k]));
+
+                            goto start
                         }
-
-                        wait_forall(k, 0, N, (!we[k] || wy[k]));
-
-                        goto start
                     fi
                 }
 
@@ -62,6 +64,11 @@
                               :: k == N -> goto anteroom_check
                               :: else // FIXME
                             fi;
+
+                            do
+                              :: wy[k] -> break
+                              :: else -> k = (k + 1) % N
+                            od;
 
 /* 11 */                    chce[i] = true;
                             possibly_fail();

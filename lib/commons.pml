@@ -4,8 +4,8 @@ inline possibly_block() {
     if
       :: skip
       :: true ->
-      end:
-          false
+        end:
+            false
     fi;
 }
 
@@ -26,7 +26,7 @@ inline wait_forall(k, s, e, p) {
         do
           :: k >= (e) -> break
           :: (k < (e)) && (p) -> k++
-          :: else -> (p); k = (s);
+          :: else -> { (p); k = (s); }
         od;
     }
 }

@@ -16,12 +16,16 @@
 #endif
 
 inline possibly_block() {
+#ifndef NEVER_BLOCKS
     if
       :: skip
       :: true ->
         end:
             false
     fi;
+#else
+    skip
+#endif
 }
 
 inline check_exists(k, s, e, p) {

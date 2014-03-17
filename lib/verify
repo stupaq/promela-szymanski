@@ -11,8 +11,8 @@ fi
 rm -f _spin_nvr.tmp pan pan.* *.trail
 
 model=`find . -name "*.pml" | head -1`
-sopts="-DLTL_$1 -DEPILOG_${2:-321}"
-popts="-f"
+sopts="$sopts -DLTL_$1 -DEPILOG_${2:-321}"
+popts="$popts -f"
 
 spin -a $sopts $model
 gcc -O2 -o pan pan.c

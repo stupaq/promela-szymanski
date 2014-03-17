@@ -8,7 +8,11 @@ inline mark_cs_entry(i) {
         k = 0;
         do
           :: k >= N -> break
-          :: k < N && (chce[k] || we[k] || wy[k]) -> { entry_lag[k]++; k++ }
+          :: k < N && k != i && (chce[k] || we[k] || wy[k]) ->
+            {
+                entry_lag[k]++;
+                k++
+            }
           :: else -> k++
         od
     }

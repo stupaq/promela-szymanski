@@ -1,0 +1,20 @@
+#!/bin/bash
+# @author Mateusz Machalica
+
+set -e
+
+if [[ $# -ne 1 || $1 -lt 1 || $1 -gt 5 ]]; then
+  echo "Bad argument"
+  exit 1
+fi
+
+rm -f *.pml.trail
+
+model=`find . -name "*.pml" | head -1`
+sopts="-DLTL_$1"
+popts="-f"
+
+spin -a $sopts $model
+gcc -O2 -o pan pan.c
+./pan -m10000000 -w26 -n -a $popts
+

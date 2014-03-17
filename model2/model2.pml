@@ -60,7 +60,7 @@
                             check_exists(k, 0, N, (wy[k] || !(!chce[k] || we[k])));
                             if
                               :: k == N -> goto anteroom_check
-                              :: else
+                              :: else // FIXME
                             fi;
 
 /* 11 */                    chce[i] = true;

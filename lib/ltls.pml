@@ -14,7 +14,7 @@
 #endif
 
 #define is_in_anteroom(i)       (we[i] && !chce[i])
-#define not_skip_anteroom(i)    ([] !(wants_cs(i) W (!is_in_anteroom(i) W is_in_cs(i)))) // FIXME
+#define not_skip_anteroom(i)    (! (<> (wants_cs(i) U (!is_in_anteroom(i) U is_in_cs(i)))))
 #ifdef LTL_2
     ltl inevitable_anteroom { FOR_ALL_PROCS(not_skip_anteroom) }
 #endif

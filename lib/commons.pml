@@ -1,5 +1,20 @@
 /** @author Mateusz Machalica */
 
+#ifndef EPILOG_321
+#ifndef EPILOG_312
+#ifndef EPILOG_231
+#ifndef EPILOG_213
+#ifndef EPILOG_132
+#ifndef EPILOG_123
+/* Default epilog. */
+#define EPILOG_321
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+
 inline possibly_block() {
     if
       :: skip

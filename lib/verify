@@ -4,10 +4,11 @@
 set -e
 
 model=`find . -name "*.pml" | head -1`
-spin_opts="-a"
+spin_opts=""
 pan_opts="-m10000000 -w26 -n -a"
+operation=0
 
-while getopts ":m:l:e:bfc" opt; do
+while getopts ":m:l:e:bftc" opt; do
   case $opt in
     # Overrides default model
     m) model="$OPTARG" ;;
@@ -18,10 +19,8 @@ while getopts ":m:l:e:bfc" opt; do
     # Verifier runtime options
     f) pan_opts="$pan_opts -f" ;;
     # Miscellaneous
-    c)
-      set -x
-      rm -f _spin_nvr.tmp pan pan.* *.trail
-      exit 0;;
+    t) operation=1 ;;
+    c) operation=2 ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1 ;;
@@ -32,9 +31,15 @@ while getopts ":m:l:e:bfc" opt; do
 done
 
 set -x
-rm -f *.trail
 
-spin $spin_opts $model
-gcc -O3 -o pan pan.c
-./pan $pan_opts
+if [[ $operation -eq 0 ]]; then
+  rm -f *.trail
+  spin -a $spin_opts $model
+  gcc -O3 -o pan pan.c
+  ./pan $pan_opts
+elif [[ $operation -eq 1 ]]; then
+  spin -t -p $spin_opts $model
+elif [[ $operation -eq 2 ]]; then
+  rm -f _spin_nvr.tmp pan pan.* *.trail
+fi
 

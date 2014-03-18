@@ -19,7 +19,7 @@
 
                     /* PROLOG */
 
-                wait_entry:
+                request_entry:
 /* 07 */            chce[i] = true;
 
                     wait_forall(k, 0, N, !(chce[k] && we[k]));

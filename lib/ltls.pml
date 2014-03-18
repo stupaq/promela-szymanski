@@ -6,7 +6,7 @@
 #define FOR_ALL_PROCS_2(i, p)   (p(i, 0) && p(i, 1) && p(i, 2) && p(i, 3))
 #define EXISTS_PROC_2(i, p)     (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
 
-#define WantsCS(i)              (P[i]@wait_entry)
+#define WantsCS(i)              (P[i]@request_entry)
 #define InCS(i)                 (P[i]@critical_section)
 
 #define Exclusive(i, j)         (i == j || !InCS(i) || !InCS(j))

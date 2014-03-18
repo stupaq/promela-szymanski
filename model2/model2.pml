@@ -41,7 +41,7 @@
 
                     /* PROLOG */
 
-                wait_entry:
+                request_entry:
 /* 07 */            chce[i] = true;
                     possibly_fail();
 

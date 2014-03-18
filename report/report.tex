@@ -1,9 +1,84 @@
 \input{./short-report-include.tex}
 
+\usepackage{multirow}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\newcommand{\eventually}{\, \operatorname{\lozenge} \,}
+\newcommand{\always}{\, \operatorname{\square} \,}
+\newcommand{\until}{\, \operatorname{\mathcal{U}} \,}
+
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\makeheader{Model checking of Szymanski's algorithm}{Mateusz Machalica}
+\makeheader{Analysis of Szymanski's algorithm in Spin}{Mateusz Machalica}
+
+\section{Analysis summary}
+
+% TODO
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{4}{*}{properties}     & \multicolumn{9}{|c|}{models} \\
+                                & \multicolumn{7}{|c|}{failure susceptible} & \multicolumn{2}{|c|}{failure resistant} \\
+                                & never blocking & \multicolumn{6}{|c|}{blocking in local section} & never blocking & blocking in local section \\
+                                & 321 & 321 & 312 & 231 & 213 & 132 & 123 &  &  \\
+\hline
+\ref{mutual_exclusion}          &  &  &  &  &  &  &  &  & \\
+\hline
+\ref{inevitable_anteroom}       &  &  &  &  &  &  &  &  & \\
+\hline
+ \ref{anteroom_exit}            &  &  &  &  &  &  &  &  & \\
+\hline
+ \ref{liveness}                 &  &  &  &  &  &  &  &  & \\
+\hline
+ \ref{linear_wait}              &  &  &  &  &  &  &  &  & \\
+\hline
+\end{tabular}
+\end{center}
+
+I strongly believe that most of the labels in above summary are self-explanatory.
+The only model's feature which might be a bit cryptic is the permutation associated with it.
+If we associate the following labels with assignment statements present in protocol's epilogue:
+\begin{enumerate}
+    \item \verb+chce[i] = false;+
+    \item \verb+we[i] = false;+
+    \item \verb+wy[i] = false;+
+\end{enumerate}
+, then the permutation denotes the order of execution of above statements in the epilogue.
+For detailed description of experiments methodology, please see appropriate section.
+
+\section{Introduction}
+
+During the course of this brief analysis of Szymanski's mutual exclusion algorithm we will repeatedly refer to the following properties:
+\begin{enumerate}
+    \item\label{mutual_exclusion}
+        $\always \forall_i \forall_j (i = j \lor \neg \verb+P[i]@critical_section+ \lor \neg \verb+P[j]@critical_section+)$
+    \item\label{inevitable_anteroom}
+        $\neg (\exists_i \eventually (\verb+P[i]@request_entry+ \until (\neg (\verb+we[i] && !chce[i]+) \until \verb+P[i]@critical_section+)))$
+    \item\label{anteroom_exit}
+        $\always \forall_i (\exists_j (\verb+we[i] && !chce[i]+ \implies i \neq j \land \verb+wy[j]+))$
+    \item\label{liveness}
+        $\always \forall_i (\verb+P[i]@request_entry+ \implies \eventually \verb+P[i]@critical_section+)$
+    \item\label{linear_wait}
+        linear wait % TODO
+\end{enumerate}
+, where we quantify over the set of process identifiers and constructs of the form $\verb+P[i]@label+$ mean that process $i$ is about to execute instruction labelled with \verb+label+.
+Names of the labels should be understood intuitively and they match names of labels present in provided models.
+Note that pairs of operators $\forall$ and $\always$ as well as $\exists$ and $\eventually$ are commutative, therefore all properties have the expected invariant form $\always (\ldots)$.
+
+% TODO
+
+\section{Experiments methodology}
+
+% TODO
+
+\section{Results discussion}
+
+% TODO
+
+\section{Final remarks}
 
 % TODO
 

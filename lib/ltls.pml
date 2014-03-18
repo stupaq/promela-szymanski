@@ -16,7 +16,7 @@
 #endif
 
 #define InAnteroom(i)           (we[i] && !chce[i])
-#define SkipsAnteroom(i)        (<> (WantsCS(i) U (!InAnteroom(i) U InCS(i)))) // FIXME maybe W is more appropriate
+#define SkipsAnteroom(i)        (<> (WantsCS(i) U (!InAnteroom(i) U InCS(i))))
 #ifdef LTL_2
     ltl InevitableAnteroom { ! EXISTS_PROC(SkipsAnteroom) }
 #endif

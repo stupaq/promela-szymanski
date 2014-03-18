@@ -90,12 +90,50 @@
 
                     /* EPILOG */
 
-/* 16 */            chce[i] = false;
+#ifdef EPILOG_321
+/* 14 */            wy[i] = false;
                     possibly_fail();
 /* 15 */            we[i] = false;
                     possibly_fail();
-/* 14 */            wy[i] = false;
-                    //possibly_fail(); /* Redundant therefore removed. */
+/* 16 */            chce[i] = false;
+#endif
+#ifdef EPILOG_312
+                    wy[i] = false;
+                    possibly_fail();
+                    chce[i] = false;
+                    possibly_fail();
+                    we[i] = false;
+#endif
+#ifdef EPILOG_231
+                    we[i] = false;
+                    possibly_fail();
+                    wy[i] = false;
+                    possibly_fail();
+                    chce[i] = false;
+#endif
+#ifdef EPILOG_213
+                    we[i] = false;
+                    possibly_fail();
+                    chce[i] = false;
+                    possibly_fail();
+                    wy[i] = false;
+#endif
+#ifdef EPILOG_132
+                    chce[i] = false;
+                    possibly_fail();
+                    wy[i] = false;
+                    possibly_fail();
+                    we[i] = false;
+#endif
+#ifdef EPILOG_123
+                    chce[i] = false;
+                    possibly_fail();
+                    we[i] = false;
+                    possibly_fail();
+                    wy[i] = false;
+#endif
+                    /* There is no difference between failing after the epilogue and finishing without interruption with
+                    * respect to global state. Therefore we can skip `possibly_fail();` here. */
 
 /* 17 */            goto start
 /* 18 */        }

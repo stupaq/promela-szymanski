@@ -90,11 +90,11 @@
 
                     /* EPILOG */
 
-/* 14 */            wy[i] = false;
+/* 16 */            chce[i] = false;
                     possibly_fail();
 /* 15 */            we[i] = false;
                     possibly_fail();
-/* 16 */            chce[i] = false;
+/* 14 */            wy[i] = false;
                     //possibly_fail(); /* Redundant therefore removed. */
 
 /* 17 */            goto start

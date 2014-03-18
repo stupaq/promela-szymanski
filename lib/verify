@@ -3,18 +3,38 @@
 
 set -e
 
-if [[ $# -lt 1 || $1 -lt 1 || $1 -gt 5 ]]; then
-  echo "Bad argument"
-  exit 1
-fi
-
-rm -f _spin_nvr.tmp pan pan.* *.trail
-
 model=`find . -name "*.pml" | head -1`
-sopts="$sopts -DLTL_$1 -DEPILOG_${2:-321}"
-popts="$popts -f"
+spin_opts="-a"
+pan_opts="-m10000000 -w26 -n -a"
 
-spin -a $sopts $model
-gcc -O2 -o pan pan.c
-./pan -m10000000 -w26 -n -a $popts
+while getopts ":m:l:e:bfc" opt; do
+  case $opt in
+    # Overrides default model
+    m) model="$OPTARG" ;;
+    # Model generation options
+    l) spin_opts="$spin_opts -DLTL=$OPTARG" ;;
+    e) spin_opts="$spin_opts -DEPILOG=$OPTARG" ;;
+    b) spin_opts="$spin_opts -DMAY_BLOCK_LS" ;;
+    # Verifier runtime options
+    f) pan_opts="$pan_opts -f" ;;
+    # Miscellaneous
+    c)
+      set -x
+      rm -f _spin_nvr.tmp pan pan.* *.trail
+      exit 0;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1 ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1 ;;
+  esac
+done
+
+set -x
+rm -f *.trail
+
+spin $spin_opts $model
+gcc -O3 -o pan pan.c
+./pan $pan_opts
 

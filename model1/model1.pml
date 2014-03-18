@@ -15,7 +15,7 @@
 /* 06 */        start:
                     /* SEKCJA LOKALNA */
 
-                    possibly_block();
+                    local_section();
 
                     /* PROLOG */
 
@@ -57,35 +57,32 @@
 
                     /* EPILOG */
 
-#ifdef EPILOG_321
+#if EPILOG == 321
 /* 14 */            wy[i] = false;
 /* 15 */            we[i] = false;
 /* 16 */            chce[i] = false;
-#endif
-#ifdef EPILOG_312
+#elif EPILOG == 312
                     wy[i] = false;
                     chce[i] = false;
                     we[i] = false;
-#endif
-#ifdef EPILOG_231
+#elif EPILOG == 231
                     we[i] = false;
                     wy[i] = false;
                     chce[i] = false;
-#endif
-#ifdef EPILOG_213
+#elif EPILOG == 213
                     we[i] = false;
                     chce[i] = false;
                     wy[i] = false;
-#endif
-#ifdef EPILOG_132
+#elif EPILOG == 132
                     chce[i] = false;
                     wy[i] = false;
                     we[i] = false;
-#endif
-#ifdef EPILOG_123
+#elif EPILOG == 123
                     chce[i] = false;
                     we[i] = false;
                     wy[i] = false;
+#else
+#error "protocol epilog must be chosen, any permutation of {1, 2, 3} is acceptable"
 #endif
 
 /* 17 */            goto start

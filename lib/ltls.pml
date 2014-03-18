@@ -17,20 +17,23 @@
 
 #define WantsCS(i)              (P[i]@request_entry)
 #define InCS(i)                 (P[i]@critical_section)
+#define InAnteroom(i)           (P[i]@in_anteroom)
 
 #define Exclusive(i, j)         (i == j || !InCS(i) || !InCS(j))
 #define AloneInCS(i)            FOR_ALL_PROCS_2(i, Exclusive)
 
-#define InAnteroom(i)           (we[i] && !chce[i])
 #define SkipsAnteroom(i)        (<> (WantsCS(i) U (!InAnteroom(i) U InCS(i))))
 
-#define JLetsIExit(i, j)        (InAnteroom(i) -> i != j && <> wy[j])
+#define JLetsIExit(i, j)        (we[i] && !chce[i] -> i != j && <> wy[j])
 #define ExitsAnteroom(i)        EXISTS_PROC_2(i, JLetsIExit)
 
 #define IsLively(i)             (WantsCS(i) -> <> InCS(i))
 
 #define EntryLagLimit           (2 * N)
 #define LimitedWait(i)          (entry_lag[i] <= EntryLagLimit)
+
+#define JLetsIExit2(i, j)       (InAnteroom(i) -> i != j && <> wy[j])
+#define ExitsAnteroom2(i)       EXISTS_PROC_2(i, JLetsIExit2)
 
 #if LTL == 1
     ltl MutualExclusion { [] FOR_ALL_PROCS(AloneInCS) }
@@ -42,6 +45,8 @@
     ltl Liveness { [] FOR_ALL_PROCS(IsLively) }
 #elif LTL == 5
     ltl LinearWait { [] FOR_ALL_PROCS(LimitedWait) } // FIXME not exactly what we wanted here
+#elif LTL == 6
+    ltl ExitAnteroom2 { [] FOR_ALL_PROCS(ExitsAnteroom2) }
 #else
 #warning "running verifier without LTL formula makes very little sense"
 #endif

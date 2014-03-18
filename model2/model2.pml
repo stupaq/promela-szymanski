@@ -59,6 +59,7 @@
 /* 10 */                    chce[i] = false;
                             possibly_fail();
 
+                        in_anteroom:
                             check_exists(k, 0, N, (wy[k] || !(!chce[k] || we[k])));
                             if
                               :: k == N -> goto anteroom_check

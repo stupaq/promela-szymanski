@@ -34,6 +34,7 @@
 /* 09 */                {
 /* 10 */                    chce[i] = false;
 
+                        in_anteroom:
                             do
                               :: wy[k] -> break
                               :: else -> k = (k + 1) % N

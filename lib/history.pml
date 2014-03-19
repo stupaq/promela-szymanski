@@ -3,6 +3,7 @@
 byte entry_lag[N];
 
 inline mark_cs_entry(i) {
+#if LTL == 5
     d_step {
         entry_lag[i] = 0;
         k = 0;
@@ -16,9 +17,16 @@ inline mark_cs_entry(i) {
           :: else -> k++
         od
     }
+#else
+    skip;
+#endif
 }
 
 inline mark_failure(i) {
+#if LTL == 5
     entry_lag[i] = 0;
+#else
+    skip;
+#endif
 }
 

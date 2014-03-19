@@ -17,7 +17,7 @@ inline count_init() {
 }
 
 inline local_section() {
-#ifdef MAY_BLOCK_LS
+#ifndef PROCESSES_NEVER_BLOCK
     atomic {
         if
           :: skip
@@ -27,7 +27,7 @@ inline local_section() {
         fi;
     }
 #else
-#warning "processes will always request critical section reentry"
+#warning "processes cannot block in local section and  will always request critical section reentry"
     skip;
 #endif
 }
@@ -36,8 +36,8 @@ inline local_section() {
  * lost, therefore to cover all possible scenarios we can nondeterministically fail after each
  * modification of the global state only. */
 inline possibly_fail() {
-#ifndef RELIABLE_PROCESSES
-#warning "processes may fail (restart) nondeterministically"
+#ifdef RESTARTING_PROCESSES
+#warning "processes may nondeterministically restart at any moment"
     atomic {
         if
           :: skip

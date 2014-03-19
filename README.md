@@ -14,8 +14,8 @@ with appropriate arguments as described below.
 * `-m <model file>` overrides default model file, by default the only model contained in the directory is selected
 * `-l <property number>` verifies given property during simulation, see attached report
 * `-e <permutation>` selects epilogue's statements permutation as described in the report
-* `-b` enables each process to nondeterministically block in its local section
-* `-r` makes processes reliable in failure resistant model
+* `-n` none of the processes can ever block in local section
+* `-r` makes processes unreliable (they might restart nondeterministically)
 * `-f` enables weak fairness during simulation
 * `-t` shows recorded trail, trace file must be present in the current directory
 * `-c` cleans up leftover files (including trace file)

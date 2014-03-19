@@ -15,7 +15,7 @@
                     goto start;
 
                 restart:
-                    (count(0,1,0) + count(0,1,1) == 0);
+                    (count(0,1,0) + count(1,1,0) == 0);
 
 /* 06 */        start:
                     /* SEKCJA LOKALNA */

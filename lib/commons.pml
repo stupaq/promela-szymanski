@@ -1,6 +1,8 @@
 /** @author Mateusz Machalica */
 
 byte states_count[8];
+/* With this macro it is easy to express conditions quantified existentially by comaring sum of counts with zero and
+* conditions quantified universally by comparing sum to N or negating the condition. */
 #define count(chce, we, wy)         states_count[4*chce + 2*we + 1*wy]
 #define count_this                  count(chce[_pid], we[_pid], wy[_pid])
 #define begin_change                skip; d_step { count_this--;

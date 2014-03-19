@@ -5,8 +5,8 @@
 /* 02 */        bool chce[N], we[N], wy[N];
 /* 03 */        #define i _pid
 
-#include "../lib/history.pml"
-#include "../lib/commons.pml"
+#include "history.pml"
+#include "commons.pml"
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
@@ -25,34 +25,34 @@
                     /* PROLOG */
 
                 request_entry:
-                    begin_change {
+                    begin_change
 /* 07 */            chce[i] = true;
-                    } end_change
+                    end_change
 
                     /* wait until forall !(chce && we) */
                     (count(1,1,0) + count(1,1,1) == 0);
 
-                    begin_change {
+                    begin_change
 /* 08 */            we[i] = true;
-                    } end_change
+                    end_change
 
                 anteroom_check:
                     if
                       /* check if exists (chce && !we) */
                       :: (count(1,0,0) + count(1,0,1) > 0) ->
 /* 09 */                {
-                            begin_change {
+                            begin_change
 /* 10 */                    chce[i] = false;
-                            } end_change
+                            end_change
 
                         in_anteroom:
                             /* wait until exists (wy) or forall (!chce || wy) */
                             ((count(0,0,1) + count(0,1,1) + count(1,0,1) + count(1,1,1) > 0)
                                 || (count(1,0,0) + count(1,0,1) == 0));
 
-                            begin_change {
+                            begin_change
 /* 11 */                    chce[i] = true;
-                            } end_change
+                            end_change
 
                             if
                               /* check if forall (!wy) */
@@ -64,9 +64,9 @@
                       :: else
                     fi;
 
-                    begin_change {
+                    begin_change
 /* 13 */            wy[i] = true;
-                    } end_change
+                    end_change
 
                     /* wait until forall higher pids (!we || wy) */
                     wait_forall(k, i + 1, N, (!we[k] || wy[k]));
@@ -82,53 +82,53 @@
                     /* EPILOG */
 
 #if EPILOG == 321
-                    begin_change {
+                    begin_change
 /* 14 */            wy[i] = false;
-                    } interrupt_change {
+                    interrupt_change
 /* 15 */            we[i] = false;
-                    } interrupt_change {
+                    interrupt_change
 /* 16 */            chce[i] = false;
-                    } end_change
+                    end_change
 #elif EPILOG == 312
-                    begin_change {
+                    begin_change
                     wy[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     chce[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     we[i] = false;
-                    } end_change
+                    end_change
 #elif EPILOG == 231
-                    begin_change {
+                    begin_change
                     we[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     wy[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     chce[i] = false;
-                    } end_change
+                    end_change
 #elif EPILOG == 213
-                    begin_change {
+                    begin_change
                     we[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     chce[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     wy[i] = false;
-                    } end_change
+                    end_change
 #elif EPILOG == 132
-                    begin_change {
+                    begin_change
                     chce[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     wy[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     we[i] = false;
-                    } end_change
+                    end_change
 #elif EPILOG == 123
-                    begin_change {
+                    begin_change
                     chce[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     we[i] = false;
-                    } interrupt_change {
+                    interrupt_change
                     wy[i] = false;
-                    } end_change
+                    end_change
 #else
 #error "protocol epilog must be chosen, any permutation of {1, 2, 3} is acceptable"
 #endif
@@ -136,5 +136,5 @@
 /* 17 */            goto start
 /* 18 */        }
 
-#include "../lib/ltls.pml"
+#include "ltls.pml"
 

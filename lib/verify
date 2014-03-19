@@ -4,7 +4,7 @@
 set -e
 
 model=`find . -name "*.pml" | head -1`
-spin_opts=""
+spin_opts="-E-I../lib/"
 pan_opts="-n -a"
 operation=0
 

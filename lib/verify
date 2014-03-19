@@ -5,10 +5,10 @@ set -e
 
 model=`find . -name "*.pml" | head -1`
 spin_opts=""
-pan_opts="-m100000000 -w27 -n -a"
+pan_opts="-n -a"
 operation=0
 
-while getopts ":m:l:e:nrftc" opt; do
+while getopts ":m:l:e:nrfSMLtc" opt; do
   case $opt in
     # Overrides default model
     m) model="$OPTARG" ;;
@@ -19,6 +19,9 @@ while getopts ":m:l:e:nrftc" opt; do
     r) spin_opts="$spin_opts -DRESTARTING_PROCESSES" ;;
     # Verifier runtime options
     f) pan_opts="$pan_opts -f" ;;
+    S) pan_opts="$pan_opts -m10000000 -w26" ;;
+    M) pan_opts="$pan_opts -m50000000 -w27" ;;
+    L) pan_opts="$pan_opts -m200000000 -w27" ;;
     # Miscellaneous
     t) operation=1 ;;
     c) operation=2 ;;

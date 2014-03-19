@@ -17,6 +17,7 @@ with appropriate arguments as described below.
 * `-n` none of the processes can ever block in local section
 * `-r` makes processes unreliable (they might restart nondeterministically)
 * `-f` enables weak fairness during simulation
+* `-S` `-M` `-L` small, medium and large verifier resource usage limits
 * `-t` shows recorded trail, trace file must be present in the current directory
 * `-c` cleans up leftover files (including trace file)
 

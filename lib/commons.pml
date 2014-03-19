@@ -50,8 +50,6 @@ inline possibly_fail() {
                 we[i] = false;
                 wy[i] = false;
                 count_this++;
-                mark_failure(i);
-
                 goto restart
             }
         fi;

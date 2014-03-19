@@ -12,7 +12,6 @@
 /* 03 */        #define i _pid
 
 #include "commons.pml"
-#include "history.pml"
 
 /* 04 */        active [N] proctype P()
 /* 05 */        {
@@ -78,7 +77,7 @@
                     /* SEKCJA KRYTYCZNA */
 
                 critical_section:
-                    mark_cs_entry(i);
+                    skip;
 
                     /* EPILOG */
 

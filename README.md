@@ -15,6 +15,7 @@ with appropriate arguments as described below.
 * `-l <property number>` verifies given property during simulation, see attached report
 * `-e <permutation>` selects epilogue's statements permutation as described in the report
 * `-b` enables each process to nondeterministically block in its local section
+* `-r` makes processes reliable in failure resistant model
 * `-f` enables weak fairness during simulation
 * `-t` shows recorded trail, trace file must be present in the current directory
 * `-c` cleans up leftover files (including trace file)

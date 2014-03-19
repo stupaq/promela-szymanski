@@ -8,7 +8,7 @@ spin_opts=""
 pan_opts="-m100000000 -w27 -n -a"
 operation=0
 
-while getopts ":m:l:e:bftc" opt; do
+while getopts ":m:l:e:brftc" opt; do
   case $opt in
     # Overrides default model
     m) model="$OPTARG" ;;
@@ -16,6 +16,7 @@ while getopts ":m:l:e:bftc" opt; do
     l) spin_opts="$spin_opts -DLTL=$OPTARG" ;;
     e) spin_opts="$spin_opts -DEPILOG=$OPTARG" ;;
     b) spin_opts="$spin_opts -DMAY_BLOCK_LS" ;;
+    r) spin_opts="$spin_opts -DRELIABLE_PROCESSES" ;;
     # Verifier runtime options
     f) pan_opts="$pan_opts -f" ;;
     # Miscellaneous

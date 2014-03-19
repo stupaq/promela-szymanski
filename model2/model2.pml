@@ -12,6 +12,7 @@
                  * lost, therefore to cover all possible scenarios we can nondeterministically fail after each
                  * modification of the global state only. */
                 inline possibly_fail() {
+#ifndef RELIABLE_PROCESSES
                     if
                       :: skip
                       :: true ->
@@ -27,7 +28,11 @@
 
                             goto start
                         }
-                    fi
+                    fi;
+#else
+#warning "processes will execute without failures (restarts)"
+                    skip;
+#endif
                 }
 
 /* 04 */        active [N] proctype P()

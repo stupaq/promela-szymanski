@@ -6,6 +6,11 @@
 #define EXISTS_PROC(p)          (p(0) || p(1) || p(2) || p(3))
 #define FOR_ALL_PROCS_2(i, p)   (p(i, 0) && p(i, 1) && p(i, 2) && p(i, 3))
 #define EXISTS_PROC_2(i, p)     (p(i, 0) || p(i, 1) || p(i, 2) || p(i, 3))
+#elif N == 3
+#define FOR_ALL_PROCS(p)        (p(0) && p(1) && p(2))
+#define EXISTS_PROC(p)          (p(0) || p(1) || p(2))
+#define FOR_ALL_PROCS_2(i, p)   (p(i, 0) && p(i, 1) && p(i, 2))
+#define EXISTS_PROC_2(i, p)     (p(i, 0) || p(i, 1) || p(i, 2))
 #elif N == 2
 #define FOR_ALL_PROCS(p)        (p(0) && p(1))
 #define EXISTS_PROC(p)          (p(0) || p(1))

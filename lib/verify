@@ -5,7 +5,7 @@ set -e
 
 model=`find . -name "*.pml" | head -1`
 spin_opts=""
-pan_opts="-m10000000 -w26 -n -a"
+pan_opts="-m100000000 -w27 -n -a"
 operation=0
 
 while getopts ":m:l:e:bftc" opt; do

@@ -44,17 +44,18 @@
                             } end_change
 
                         in_anteroom:
-                            check_exists(k, 0, N, (wy[k] || !(!chce[k] || we[k])));
-                            if
-                              :: k == N -> goto anteroom_check
-                              :: else -> k = 0
-                            fi;
-
-                            (count(0,0,1) + count(0,1,1) + count(1,0,1) + count(1,1,1) > 0);
+                            ((count(0,0,1) + count(0,1,1) + count(1,0,1) + count(1,1,1) > 0)
+                                || (count(1,0,0) + count(1,0,1) == 0));
 
                             begin_change {
 /* 11 */                    chce[i] = true;
                             } end_change
+
+                            if
+                              :: (count(0,0,1) + count(0,1,1) + count(1,0,1) + count(1,1,1) == 0)
+                                    -> goto anteroom_check
+                              :: else
+                            fi;
 /* 12 */                }
                       :: else
                     fi;

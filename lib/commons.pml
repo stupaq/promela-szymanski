@@ -5,6 +5,9 @@ byte states_count[8];
 #define count_this                  count(chce[_pid], we[_pid], wy[_pid])
 #define begin_change                skip; d_step { count_this--;
 #define interrupt_change            end_change begin_change
+/* We model failures in such a way, that entire local state (local variables & instruction pointer) are
+ * lost, therefore to cover all possible scenarios we can nondeterministically fail after each
+ * modification of the global state only. */
 #define end_change                  count_this++; } possibly_fail();
 
 inline count_init() {
@@ -32,9 +35,6 @@ inline local_section() {
 #endif
 }
 
-/* We model failures in such a way, that entire local state (local variables & instruction pointer) are
- * lost, therefore to cover all possible scenarios we can nondeterministically fail after each
- * modification of the global state only. */
 inline possibly_fail() {
 #ifdef RESTARTING_PROCESSES
 #warning "processes may nondeterministically restart at any moment"

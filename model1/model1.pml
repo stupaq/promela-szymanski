@@ -28,6 +28,7 @@
 /* 07 */            chce[i] = true;
                     } end_change
 
+                    /* wait until forall !(chce && we) */
                     (count(1,1,0) + count(1,1,1) == 0);
 
                     begin_change {
@@ -36,6 +37,7 @@
 
                 anteroom_check:
                     if
+                      /* check if exists (chce && !we) */
                       :: (count(1,0,0) + count(1,0,1) > 0) ->
 /* 09 */                {
                             begin_change {
@@ -43,6 +45,7 @@
                             } end_change
 
                         in_anteroom:
+                            /* wait until exists (wy) */
                             (count(0,0,1) + count(0,1,1) + count(1,0,1) + count(1,1,1) > 0);
 
                             begin_change {
@@ -56,8 +59,10 @@
 /* 13 */            wy[i] = true;
                     } end_change
 
+                    /* wait until forall higher pids (!we || wy) */
                     wait_forall(k, i + 1, N, (!we[k] || wy[k]));
 
+                    /* wait until forall lower pids (!we) */
                     wait_forall(k, 0, i, !we[k]);
 
                     /* SEKCJA KRYTYCZNA */

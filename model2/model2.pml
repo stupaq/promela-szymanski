@@ -63,7 +63,7 @@
                             check_exists(k, 0, N, (wy[k] || !(!chce[k] || we[k])));
                             if
                               :: k == N -> goto anteroom_check
-                              :: else // FIXME
+                              :: else -> k = 0
                             fi;
 
                             do

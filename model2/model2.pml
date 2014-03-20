@@ -129,6 +129,12 @@
                     interrupt_change
                     wy[i] = false;
                     end_change
+#elif EPILOG == 0
+                    begin_change
+                    chce[i] = false;
+                    we[i] = false;
+                    wy[i] = false;
+                    end_change
 #else
 #error "protocol epilog must be chosen, any permutation of {1, 2, 3} is acceptable"
 #endif

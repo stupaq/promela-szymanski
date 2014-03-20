@@ -12,9 +12,10 @@
 /* 05 */        {
                     byte k;
                     count_init();
+                    goto start;
 
                 restart:
-                    skip;
+                    (count(0,1,0) + count(1,1,0) == 0);
 
 /* 06 */        start:
                     /* SEKCJA LOKALNA */
@@ -120,8 +121,14 @@
                     interrupt_change
                     wy[i] = false;
                     end_change
+#elif EPILOG == 0
+                    begin_change
+                    chce[i] = false;
+                    we[i] = false;
+                    wy[i] = false;
+                    end_change
 #else
-#error "protocol epilog must be chosen, any permutation of {1, 2, 3} is acceptable"
+#error "protocol epilog must be chosen, any permutation of {1, 2, 3} or 0 (for atomic epilogue) is acceptable"
 #endif
 
 /* 17 */            goto start

@@ -20,21 +20,21 @@
 #error "number of processes set to a value that is not covered by process quantifiers"
 #endif
 
-#define WantsCS(i)              (P[i]@request_entry)
+#define Started(i)              (P[i]@started_protocol)
 #define InCS(i)                 (P[i]@critical_section)
 #define InAnteroom(i)           (P[i]@in_anteroom)
 
 #define Exclusive(i, j)         (i == j || !InCS(i) || !InCS(j))
 #define AloneInCS(i)            FOR_ALL_PROCS_2(i, Exclusive)
 
-#define SkipsAnteroom(i)        (<> (WantsCS(i) U (!InAnteroom(i) U InCS(i))))
+#define SkipsAnteroom(i)        (<> (Started(i) U (!InAnteroom(i) U InCS(i))))
 
 #define JLetsIExit(i, j)        (we[i] && !chce[i] -> i != j && <> wy[j])
 #define ExitsAnteroom(i)        EXISTS_PROC_2(i, JLetsIExit)
 
-#define IsLively(i)             (WantsCS(i) -> <> InCS(i))
+#define IsLively(i)             (Started(i) -> <> InCS(i))
 
-#define LimitedOvertake(i,j)    (WantsCS(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))))
+#define LimitedOvertake(i,j)    (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))))
 #define LimitedWait(i)          FOR_ALL_PROCS_2(i, LimitedOvertake)
 
 #define JLetsIExit2(i, j)       (InAnteroom(i) -> i != j && <> wy[j])

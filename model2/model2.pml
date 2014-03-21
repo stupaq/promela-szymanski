@@ -30,10 +30,11 @@
 
                     /* PROLOG */
 
-                request_entry:
                     begin_change
 /* 07 */            chce[i] = true;
                     end_change
+                started_protocol:
+                    skip;
 
                     /* \forall_k !(chce[k] && we[k]) \iff \neq \exists_k (chce[k] && we[k]) \iff #(chce && we) = 0 */
                     (count(1,1,0) + count(1,1,1) == 0);

@@ -44,6 +44,11 @@ is `312`.
 
     cd model2/; ./verify -r -e312 -l1
 
+Verify that there is unbounded overtaking for `model1` with epilogue `123` assuming weak fairness.
+A counterexample to this property tells us that there exists a computation, where one process overtakes the other one
+unbounded number of times in access to the critical section.
+
+    cd model1; ./verify -M -f -e231 -l-5
 
 
 Copyright (c) 2013-2014 Mateusz Machalica

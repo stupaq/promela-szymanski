@@ -12,11 +12,13 @@ Running verifier
 In order to run verifier on one of the models, first enter appropriate directory `./model{1,2}` and then run `./verify`
 with appropriate arguments as described below.
 * `-m <model file>` overrides default model file, by default the only model contained in the directory is selected
-* `-l <property number>` verifies given property during simulation, see attached report
+* `-l <property number>` verifies given property during verification, see attached report
 * `-e <permutation>` selects epilogue's statements permutation as described in the report
 * `-n` none of the processes can ever block in local section
 * `-r` makes processes unreliable (they might restart nondeterministically)
-* `-f` enables weak fairness during simulation
+* `-N <number>` overrides number of processes in the model
+* `-f` enables weak fairness during verification
+* `-i` in case of error look for minimal counterexample
 * `-S` `-M` `-L` small, medium and large verifier resource usage limits
 * `-t` shows recorded trail, trace file must be present in the current directory
 * `-c` cleans up leftover files (including trace file)

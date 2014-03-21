@@ -8,7 +8,7 @@ spin_opts="-E-I../lib/"
 pan_opts="-n -a"
 operation=0
 
-while getopts ":m:l:e:nrfiSMLtc" opt; do
+while getopts ":m:l:e:nrN:fiSMLtc" opt; do
   case $opt in
     # Overrides default model
     m) model="$OPTARG" ;;
@@ -17,6 +17,7 @@ while getopts ":m:l:e:nrfiSMLtc" opt; do
     e) spin_opts="$spin_opts -DEPILOG=$OPTARG" ;;
     n) spin_opts="$spin_opts -DPROCESSES_NEVER_BLOCK" ;;
     r) spin_opts="$spin_opts -DRESTARTING_PROCESSES" ;;
+    N) spin_opts="$spin_opts -DN_OVERRIDE=$OPTARG" ;;
     # Verifier runtime options
     f) pan_opts="$pan_opts -f" ;;
     i) pan_opts="$pan_opts -i" ;;

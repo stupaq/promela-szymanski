@@ -34,8 +34,10 @@
 
 #define IsLively(i)             (Started(i) -> <> InCS(i))
 
-#define LimitedOvertake(i,j)    (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))))
-#define LimitedWait(i)          FOR_ALL_PROCS_2(i, LimitedOvertake)
+#define LimitedOvertake2(i,j)   (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))))
+#define LimitedOvertake1(i,j)   (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))
+
+#define UnlimitedOvertake(i,j)  (<> (Started(i) && ([] (!InCS(i))) && ([] <> (!InCS(j))) && ([] <> InCS(j))))
 
 #define JLetsIExit2(i, j)       (InAnteroom(i) -> i != j && <> wy[j])
 #define ExitsAnteroom2(i)       EXISTS_PROC_2(i, JLetsIExit2)
@@ -48,13 +50,18 @@
     ltl ExitAnteroom { [] FOR_ALL_PROCS(ExitsAnteroom) }
 #elif LTL == 4
     ltl Liveness { [] FOR_ALL_PROCS(IsLively) }
-#elif LTL == 5
-    //ltl LinearWait { [] FOR_ALL_PROCS(LimitedWait) }
-    /* We would like to write something like the formulae above, but we can't since there apparently exists a limit for
-    * the length of LTL formulae. Therefore we check this property for one pair of processes only. Since our algorithm
-    * works in the same way for all pairs of processes i < j and in the same way for all pairs i > j, we can conclude
-    * that ,,linear wait'' property holds iff below LTL formulae holds. */
-    ltl LinearWait { [] (LimitedOvertake(0,1) && LimitedOvertake(1,0)) }
+#elif LTL == 51
+    /* We would like to write a quantified formulae, but we can't since there apparently exists a limit for the length
+    * of LTL formulae. Therefore we check this property for one pair of processes only. Since our algorithm works in the
+    * same way for all pairs of processes i < j and in the same way for all pairs i > j, we can conclude that ,,linear
+    * wait'' property holds iff below LTL formulae holds. */
+    ltl LinearWait1 { [] (LimitedOvertake1(0,1) && LimitedOvertake1(1,0)) }
+#elif LTL == 52
+    ltl LinearWait2 { [] (LimitedOvertake2(0,1) && LimitedOvertake2(1,0)) }
+#elif LTL == -5
+    /* If this property holds, then there exists a computation, where one process overtakes another process unbounded
+    * number of times in access to critical section. */
+    ltl NoLinearWait { (UnlimitedOvertake(0,1) || UnlimitedOvertake(1,0)) }
 #elif LTL == 6
     ltl ExitAnteroom2 { [] FOR_ALL_PROCS(ExitsAnteroom2) }
 #else

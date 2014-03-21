@@ -34,10 +34,16 @@
 
 #define IsLively(i)             (Started(i) -> <> InCS(i))
 
-#define LimitedOvertake2(i,j)   (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))))
-#define LimitedOvertake1(i,j)   (Started(i) -> !InCS(j) U (InCS(j) U (!InCS(j) U InCS(i))))
+#define LimitedOvertake2(i,j)   (i != j && (Started(i) ->   \
+                                !InCS(j) U (InCS(j) U (     \
+                                !InCS(j) U (InCS(j) U (     \
+                                !InCS(j) U InCS(i)))))))
+#define LimitedOvertake1(i,j)   (i != j && (Started(i) ->   \
+                                !InCS(j) U (InCS(j) U (     \
+                                !InCS(j) U InCS(i)))))
 
-#define UnlimitedOvertake(i,j)  (<> (Started(i) && ([] (!InCS(i))) && ([] <> (!InCS(j))) && ([] <> InCS(j))))
+#define UnlimitedOvertake(i,j)  (i != j && (<> (Started(i) && ([] (!InCS(i))) \
+                                && ([] <> (!InCS(j))) && ([] <> InCS(j)))))
 
 #define JLetsIExit2(i, j)       (InAnteroom(i) -> i != j && <> wy[j])
 #define ExitsAnteroom2(i)       EXISTS_PROC_2(i, JLetsIExit2)
@@ -58,13 +64,15 @@
     ltl LinearWait1 { [] (LimitedOvertake1(0,1) && LimitedOvertake1(1,0)) }
 #elif LTL == 52
     ltl LinearWait2 { [] (LimitedOvertake2(0,1) && LimitedOvertake2(1,0)) }
-#elif LTL == -5
+#elif LTL == -501
     /* If this property holds, then there exists a computation, where one process overtakes another process unbounded
     * number of times in access to critical section. */
-    ltl NoLinearWait { (UnlimitedOvertake(0,1) || UnlimitedOvertake(1,0)) }
+    ltl NoLinearWait { (UnlimitedOvertake(0,1)) }
+#elif LTL == -510
+    ltl NoLinearWait { (UnlimitedOvertake(1,0)) }
 #elif LTL == 6
     ltl ExitAnteroom2 { [] FOR_ALL_PROCS(ExitsAnteroom2) }
 #else
-#warning "running verifier without LTL formula makes very little sense"
+#error "running verifier without LTL formula makes very little sense"
 #endif
 

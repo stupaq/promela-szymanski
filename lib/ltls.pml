@@ -72,6 +72,27 @@
     ltl NoLinearWait { (UnlimitedOvertake(1,0)) }
 #elif LTL == 6
     ltl ExitAnteroom2 { [] FOR_ALL_PROCS(ExitsAnteroom2) }
+#elif LTL == 999
+    active proctype ModelVerificator()
+    {
+        int k, l;
+        /* Wait for all processes to start. */
+        count(0,0,0) == N;
+        /* Check all assertions periodically. */
+    end_start:
+        atomic {
+            l = 0;
+            /* Number of processes in each state cannot be negative. */
+            for (k in states_count) {
+                assert(states_count[k] >= 0);
+                l = l + states_count[k];
+            }
+            /* Number of processes in any state must be equal to N. */
+            assert(l == N);
+            /* Check again. */
+            goto end_start;
+        }
+    }
 #else
 #error "running verifier without LTL formula makes very little sense"
 #endif

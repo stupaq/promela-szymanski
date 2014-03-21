@@ -93,7 +93,7 @@
 
                     /* EPILOG */
 
-#if EPILOG == 321
+#if EPILOGUE == 321
                     begin_change
 /* 14 */            wy[i] = false;
                     interrupt_change
@@ -101,7 +101,7 @@
                     interrupt_change
 /* 16 */            chce[i] = false;
                     end_change
-#elif EPILOG == 312
+#elif EPILOGUE == 312
                     begin_change
                     wy[i] = false;
                     interrupt_change
@@ -109,7 +109,7 @@
                     interrupt_change
                     we[i] = false;
                     end_change
-#elif EPILOG == 231
+#elif EPILOGUE == 231
                     begin_change
                     we[i] = false;
                     interrupt_change
@@ -117,7 +117,7 @@
                     interrupt_change
                     chce[i] = false;
                     end_change
-#elif EPILOG == 213
+#elif EPILOGUE == 213
                     begin_change
                     we[i] = false;
                     interrupt_change
@@ -125,7 +125,7 @@
                     interrupt_change
                     wy[i] = false;
                     end_change
-#elif EPILOG == 132
+#elif EPILOGUE == 132
                     begin_change
                     chce[i] = false;
                     interrupt_change
@@ -133,7 +133,7 @@
                     interrupt_change
                     we[i] = false;
                     end_change
-#elif EPILOG == 123
+#elif EPILOGUE == 123
                     begin_change
                     chce[i] = false;
                     interrupt_change
@@ -141,14 +141,14 @@
                     interrupt_change
                     wy[i] = false;
                     end_change
-#elif EPILOG == 0
+#elif EPILOGUE == 6
                     begin_change
                     chce[i] = false;
                     we[i] = false;
                     wy[i] = false;
                     end_change
 #else
-#error "protocol epilog must be chosen, any permutation of {1, 2, 3} or 0 (for atomic epilogue) is acceptable"
+#error "protocol epilogue must be chosen, any permutation of {1, 2, 3} or 6 (for atomic epilogue) is acceptable"
 #endif
 
 /* 17 */            goto start

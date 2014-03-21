@@ -14,7 +14,7 @@ while getopts ":m:l:e:nrN:fiSMLtc" opt; do
     m) model="$OPTARG" ;;
     # Model generation options
     l) spin_opts="$spin_opts -DLTL=$OPTARG" ;;
-    e) spin_opts="$spin_opts -DEPILOG=$OPTARG" ;;
+    e) spin_opts="$spin_opts -DEPILOGUE=$OPTARG" ;;
     n) spin_opts="$spin_opts -DPROCESSES_NEVER_BLOCK" ;;
     r) spin_opts="$spin_opts -DRESTARTING_PROCESSES" ;;
     N) spin_opts="$spin_opts -DN_OVERRIDE=$OPTARG" ;;

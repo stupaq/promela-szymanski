@@ -37,7 +37,7 @@ actually does not matter for mutual exclusion):
 Verify linear wait for `model1` (with constant 2) in weakly fair model and epilogue permutation `123`, show trail (this
 particular verification should fail).
 
-    cd model1/; ./verify -f -e123 -l52; ./verify -f -e123 -l52 -t
+    cd model1/; ./verify -f -e123 -l5; ./verify -f -e123 -l5 -t
 
 Verify mutual exclusion for `model2` assuming that processes might restart nondeterministically and epilogue permutation
 is `312`.
@@ -48,7 +48,7 @@ Verify that there is unbounded overtaking for `model1` with epilogue `123` assum
 A counterexample to this property tells us that there exists a computation, where one process overtakes the other one
 unbounded number of times in access to the critical section.
 
-    cd model1; ./verify -M -f -e231 -l-5
+    cd model1; ./verify -M -f -e123 -l6
 
 
 Copyright (c) 2013-2014 Mateusz Machalica

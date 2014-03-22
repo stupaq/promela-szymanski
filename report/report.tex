@@ -177,20 +177,29 @@ Minimal counterexample found after simplifying the model (by turning off weak fa
 \subsubsection*{Failure resistant algorithm}
 
 Szymanski's paper \cite{Original} states that correct order of epilogue's assignments is described by permutation $123$, while our analysis shows that not only it does not work for failure resistant algorithm, but also for failure susceptible one.
-Also note that liveness and linear wait properties do not hold when we allow processes to restart.
-
-% TODO
+Also note that liveness and linear wait properties do not hold when we allow processes to restart, which contradicts thesis of the paper.
 
 \subsection*{Technical (implementation) details and reasoning}
 
-% TODO
+There are just a few caveats in the models implementations, we would like to cover in more details.
+
+First, to reduce complexity of the models, we have made all quantifiers over processes atomic and got rid of busy waiting.
+This way all negative results (e.g. property $A$ does not hold) are rock-solid, positive ones would need more sophisticated argumentation.
+
+Second, since we model process failures in such a way that resetting process forgets its internal state (local variables and instruction pointer), there is no difference between failing at instruction $\alpha$ or instruction $\beta$, as long as there is no write to global variable between them.
+This leads to another simplification: we can nondeterministically fail after each global write, yet still cover all possible executions of real-world algorithm, which can fail at any moment.
+
+Each model comes with \verb+./verifier+ script, which allows for much broader customisation of the algorithm and environment model than the one described in this report, details and examples can be found in attached \verb+README.md+ file.
 
 \subsection*{Final remarks}
 
 Failure susceptible version of the algorithm is not precisely formulated in \cite{Original}.
 As a result of our analysis, we have determined which permutation of epilogue's assignment statements leads to the algorithm that ensures mutual exclusion, liveness and linear wait time, even in the model where processes can block in their local sections.
 
-% TODO
+According to our analysis, the modified algorithm ensures mutual exclusion in presence of restarts of processes.
+Neither liveness nor linear wait hold in this case.
+
+%\newpage
 
 \begin{thebibliography}{9}
   \bibitem{Original} B. K. Szymanski \\

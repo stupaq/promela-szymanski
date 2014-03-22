@@ -62,13 +62,13 @@
     * same way for all pairs of processes i < j and in the same way for all pairs i > j, we can conclude that ,,linear
     * wait'' property holds iff below LTL formulae holds. */
     ltl LinearWait1 { [] (LimitedOvertake1(0,1) && LimitedOvertake1(1,0)) }
-#elif LTL == 52
+#elif LTL == 5
     ltl LinearWait2 { [] (LimitedOvertake2(0,1) && LimitedOvertake2(1,0)) }
-#elif LTL == -5
+#elif LTL == 6
     /* A counterexample to this property tells us that there exists a computation, where one process overtakes the other
     * one unbounded number of times in access to the critical section. */
     ltl NoUnlimitedOvertake { [] (NoUnlimOvertake(0,1) && NoUnlimOvertake(1,0)) }
-#elif LTL == 6
+#elif LTL == 7
     ltl ExitAnteroom2 { [] FOR_ALL_PROCS(ExitsAnteroom2) }
 #elif LTL == 999
     active proctype ModelVerificator()

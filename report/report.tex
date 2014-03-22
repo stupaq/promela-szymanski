@@ -16,28 +16,74 @@
 
 \subsection*{Evaluated properties}
 
-During the course of this brief analysis of Szymanski's mutual exclusion algorithm we will repeatedly refer to the following properties:
-\begin{enumerate}
-    \item\label{mutual_exclusion}
-        $\always \forall_i \forall_j (i = j \lor \neg \verb+P[i]@critical_section+ \lor \neg \verb+P[j]@critical_section+)$
-    \item\label{inevitable_anteroom}
-        $\neg (\exists_i \eventually (\verb+P[i]@request_entry+ \until (\neg (\verb+we[i] && !chce[i]+) \until \verb+P[i]@critical_section+)))$
-    \item\label{anteroom_exit}
-        $\always \forall_i (\exists_j (\verb+we[i] && !chce[i]+ \implies i \neq j \land \verb+wy[j]+))$
-    \item\label{liveness}
-        $\always \forall_i (\verb+P[i]@request_entry+ \implies \eventually \verb+P[i]@critical_section+)$
-    \item\label{linear_wait}
-        linear wait % TODO
-    \item\label{anteroom_exit2}
-        $\always \forall_i (\exists_j (\verb+P[i]@in_anteroom+ \implies i \neq j \land \verb+wy[j]+))$
-\end{enumerate}
-, where we quantify over the set of process identifiers and constructs of the form $\verb+P[i]@label+$ mean that process $i$ is about to execute instruction labelled with \verb+label+.
-Names of the labels should be understood intuitively and match names of the labels present in provided models.
-Note that pairs of operators $\forall$ and $\always$ as well as $\exists$ and $\eventually$ are commutative, therefore all properties have the expected invariant form $\always (\ldots)$.
+During the course of this brief analysis of Szymanski's mutual exclusion algorithm we will repeatedly refer to the following properties.
+All quantifiers are over the set of process identifiers and constructs of the form $\verb+P[i]@label+$ mean that process $i$ is about to execute instruction labelled with \verb+label+.
+Names of the labels should be understood intuitively, they also match names of the labels present in provided models.
+Note that pairs of operators $\forall$ and $\always$ as well as $\exists$ and $\eventually$ are commutative, therefore all properties have an expected invariant form $\always (\ldots)$.
 
-Please note that property (\ref{anteroom_exit}) no longer reflects our intentions when we start permuting assignment statements in the protocol's epilogue as described in the next section.
+\subsubsection*{Mutual exclusion}
+
+\begin{equation}
+\always \forall_i \forall_j (i = j \lor \neg \verb+P[i]@critical_section+ \lor \neg \verb+P[j]@critical_section+) \label{mutual_exclusion}
+\end{equation}
+
+\subsubsection*{Inevitable waiting room entry}
+
+\begin{equation}
+\neg (\exists_i \eventually (\verb+P[i]@started_protocol+ \until (\neg (\verb+we[i] && !chce[i]+) \until \verb+P[i]@critical_section+))) \label{inevitable_anteroom}
+\end{equation}
+
+\subsubsection*{Waiting room exit}
+
+\begin{equation}
+\always \forall_i (\exists_j (\verb+we[i] && !chce[i]+ \implies i \neq j \land \verb+wy[j]+)) \label{anteroom_exit}
+\end{equation}
+
+\subsubsection*{Liveness}
+
+\begin{equation}
+\always \forall_i (\verb+P[i]@started_protocol+ \implies \eventually \verb+P[i]@critical_section+) \label{liveness}
+\end{equation}
+
+\subsubsection*{Linear wait}
+
+The algorithm is symmetric with respect to all pairs of processes of the form $i < j$, that means if for one such pair number of times one of the processes can overtake the other is not bounded by a constant, then for all such pairs the bound does not hold and we have no linear waiting.
+Therefore linear waiting condition is equivalent (for this particular algorithm) to bounded overtaking condition.
+The latter is possible to express in LTL if we assume appropriate constant that bounds the number of overtakings that can happen between any two processes.
+For our purposes we will use two formulas that approximate desired condition -- existence of such constant.
+
+If property (\ref{linear_wait}) holds then we know that overtaking is bounded by two.
+\begin{equation}
+\begin{array}{rl}
+\always (\forall_i \forall_j ((i \neq j \land & \verb+P[i]@started_protocol+) \implies \\
+ & \neg \verb+P[j]@critical_section+ \until (\verb+P[j]@critical_section+ \until ( \\
+ & \neg \verb+P[j]@critical_section+ \until (\verb+P[j]@critical_section+ \until ( \\
+ & \neg \verb+P[j]@critical_section+ \until \verb+P[i]@critical_section+))))))
+\end{array}
+\label{linear_wait}
+\end{equation}
+
+On the other hand if there exists a counterexample to property (\ref{unbounded_wait}), then we have found a computation such that process $i$ starts protocol but never enters critical section, while process $j$ enters and leaves critical section infinitely many times, which means that waiting time cannot be bounded by linear function of the number of processes.
+\begin{equation}
+\begin{array}{rl}
+\always (\forall_i \forall_j ((i \neq j \land & \verb+P[i]@started_protocol+) \implies \neg ( \\
+ & \always \neg \verb+P[i]@critical_section+ \\
+ & \land \always \eventually \verb+P[j]@critical_section+ \\
+ & \land \always \eventually \neg \verb+P[j]@critical_section+)))
+\end{array}
+\label{unbounded_wait}
+\end{equation}
+
+\subsubsection*{Waiting room exit -- improved definition}
+
+Note that property (\ref{anteroom_exit}) no longer reflects our intentions when we start permuting assignment statements in the protocol's epilogue as described in the next section.
 For this reason we have proposed more accurate (based on process' instruction pointer) definition of the state described as a \emph{waiting room} in Szymanski's original paper \cite{Original}.
 Improved definition is being used in the LTL formulation of property (\ref{anteroom_exit2}).
+
+\begin{equation}
+\always \forall_i (\exists_j (\verb+P[i]@in_anteroom+ \implies i \neq j \land \verb+wy[j]+))
+\label{anteroom_exit2}
+\end{equation}
 
 All experiments were conducted with \emph{weak fairness} enabled.
 Even though for some properties this assumption can be weakened, it is crucial for proving liveness since in the real-world algorithm we implement each wait statement as a loop, that means all processes are executable at all times.
@@ -46,24 +92,26 @@ Even though for some properties this assumption can be weakened, it is crucial f
 
 % TODO
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
-\multirow{4}{*}{properties}     & \multicolumn{9}{|c|}{models} \\
-                                & \multicolumn{7}{|c|}{failure susceptible} & \multicolumn{2}{|c|}{failure resistant} \\
-                                & never blocking & \multicolumn{6}{|c|}{blocking in local section} & never blocking & blocking in local section \\
-                                & 321 & 321 & 312 & 231 & 213 & 132 & 123 &  &  \\
+\multirow{4}{*}{properties}     & \multicolumn{10}{|c|}{failure susceptible algorithm} \\
+                                & \multicolumn{8}{|c|}{no failures model} & \multicolumn{2}{|c|}{possible restarts at any moment}\\
+                                & \multicolumn{2}{|c|}{never blocking} & \multicolumn{6}{|c|}{blocking in local section} & never blocking & blocking in local section \\
+                                & 321 & 312 & 321 & 312 & 231 & 213 & 132 & 123 & 312 & 312 \\
 \hline
-(\ref{mutual_exclusion})        & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{mutual_exclusion})        & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
 \hline
-(\ref{inevitable_anteroom})     & \xx & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
+(\ref{inevitable_anteroom})     & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
 \hline
-(\ref{anteroom_exit})           & \ok & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
+(\ref{anteroom_exit})           & \ok & \xx & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
 \hline
-(\ref{liveness})                & \ok & \xx & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{liveness})                & \ok & \ok & \xx & \ok & \xx & \xx & \xx & \xx &  &  \\
 \hline
-(\ref{linear_wait})             & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{linear_wait})             & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
 \hline
-(\ref{anteroom_exit2})          & \ok & \xx & \ok & \xx & \xx & \ok & \ok &  &  \\
+(\ref{unbounded_wait})          & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+\hline
+(\ref{anteroom_exit2})          & \ok & \ok & \xx & \ok & \xx & \xx & \ok & \ok &  &  \\
 \hline
 \end{tabular}
 \end{center}
@@ -76,26 +124,41 @@ If we associate the following labels with assignment statements present in proto
     \item $\verb+we[i] = false;+$
     \item $\verb+wy[i] = false;+$
 \end{enumerate}
-, then the permutation denotes the order of execution of above statements in the epilogue.
+, then the permutation denotes the order of execution of above statements.
+
+Labels ,,no failures model'' and ,,possible restarts at any moment'' refer to the possibility of nondeterministic restart of a process.
+Even though the restart is truly nondeterministic we assume that process atomically resets all of its flags to default values and execute a special \emph{watchdog procedure} before continuing.
+The watchdog procedure involves waiting until $\forall_k \verb+(!we[k] || wy[k])+$.
+
 Labels ,,never blocking'' and ,,blocking in local section'' refer to the ability of each process to block infinitely in its local section.
 
 \subsection*{Results discussion}
 
-It should be now clear why property (\ref{anteroom_exit2}) is more on par with our intentions -- every permutation of epilogue's assignments that falsifies $\verb+chce[i]+$ before $\verb+we[i]+$, \emph{tricks us} into thinking that process $i$ is in waiting room, while it is actually leaving critical section.
-This is also an explanation why (\ref{anteroom_exit}) does not hold for assignments permutation ,,312'' in ,,never blocking'' model, while (\ref{anteroom_exit2}) does.
+\subsubsection*{Failure susceptible model}
 
-There exists as very simple counterexample which explains why properties (\ref{anteroom_exit}), (\ref{liveness}) and (\ref{anteroom_exit2}) does not hold for ,,blocking in local section'' model with assignments permutation ,,321''.
-If process $\alpha$ proceeds through prologue, critical section and halts between assignment ,,2'' and ,,1'', then the other process $\beta$ can enter the waiting room and wait for any (other) process $k$ to set $\verb+wy[k]+$ to true, which might never happen, since process $\alpha$ can get stuck in local section after setting $\verb+chce[i]+$ to false in the last instruction of the epilogue.
+It should be now clear why property (\ref{anteroom_exit2}) is more on par with our intentions -- every permutation of epilogue's assignments that falsifies $\verb+chce[i]+$ before $\verb+we[i]+$, \emph{tricks us} into thinking that process $i$ is in the waiting room, while it is actually leaving critical section.
+This is also an explanation why (\ref{anteroom_exit}) does not hold for assignments permutation $312$ in ,,never blocking'' model, while (\ref{anteroom_exit2}) does.
+
+There exists as very simple counterexample which explains why properties (\ref{anteroom_exit}), (\ref{liveness}) and (\ref{anteroom_exit2}) do not hold for ,,blocking in local section'' model with assignments permutation $321$.
+If process $\alpha$ proceeds through prologue, critical section and halts between assignment $2$ and $1$, then the other process $\beta$ can enter the waiting room and wait for any (other) process $k$ to set $\verb+wy[k]+$ to true, which might never happen, since process $\alpha$ can get stuck in local section after setting $\verb+chce[i]+$ to false in the very last instruction of the epilogue.
 
 Even simpler counterexample exists for property (\ref{inevitable_anteroom}) which states that every process must visit waiting room before entering critical section in every turn of the main loop.
 It is easy to verify that if processes enter and leave critical section one after another, without contention, then none of them enters waiting room.
 
 % TODO
 
+\subsubsection*{Failure resistant model}
+
+% TODO
+
+\subsection*{Technical (implementation) details and reasoning}
+
+% TODO
+
 \subsection*{Final remarks}
 
 Failure susceptible version of the algorithm is not precisely formulated in \cite{Original}.
-As a result of our analysis, we have determine which permutation of epilogue's assignment statements leads to the algorithm that ensures mutual exclusion, liveness and linear wait time, even in the model where processes can block in their local sections.
+As a result of our analysis, we have determined which permutation of epilogue's assignment statements leads to the algorithm that ensures mutual exclusion, liveness and linear wait time, even in the model where processes can block in their local sections.
 
 % TODO
 

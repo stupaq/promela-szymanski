@@ -39,7 +39,7 @@ particular verification should fail).
 
     cd model1/; ./verify -f -e123 -l52; ./verify -f -e123 -l52 -t
 
-Verify mutual exclusion for `model2` assuming tha processes might restart nondeterministically and epilogue permutation
+Verify mutual exclusion for `model2` assuming that processes might restart nondeterministically and epilogue permutation
 is `312`.
 
     cd model2/; ./verify -r -e312 -l1

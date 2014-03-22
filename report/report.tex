@@ -90,7 +90,6 @@ Even though for some properties this assumption can be weakened, it is crucial f
 
 \subsection*{Summary of the results}
 
-% TODO
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -99,19 +98,44 @@ Even though for some properties this assumption can be weakened, it is crucial f
                                 & \multicolumn{2}{|c|}{never blocking} & \multicolumn{6}{|c|}{blocking in local section} & never blocking & blocking in local section \\
                                 & 321 & 312 & 321 & 312 & 231 & 213 & 132 & 123 & 312 & 312 \\
 \hline
-(\ref{mutual_exclusion})        & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{mutual_exclusion})        & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{inevitable_anteroom})     & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
+(\ref{inevitable_anteroom})     & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{anteroom_exit})           & \ok & \xx & \xx & \xx & \xx & \xx & \xx & \xx &  &  \\
+(\ref{anteroom_exit})           & \ok & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{liveness})                & \ok & \ok & \xx & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{liveness})                & \ok & \ok & \xx & \ok & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{linear_wait})             & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{linear_wait})             & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{unbounded_wait})          & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx &  &  \\
+(\ref{unbounded_wait})          & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx & \xx & \xx \\
 \hline
-(\ref{anteroom_exit2})          & \ok & \ok & \xx & \ok & \xx & \xx & \ok & \ok &  &  \\
+(\ref{anteroom_exit2})          & \ok & \ok & \xx & \ok & \xx & \xx & \ok & \ok & \xx & \xx \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{4}{*}{properties}     & \multicolumn{8}{|c|}{failure resistant algorithm} \\
+                                & \multicolumn{4}{|c|}{no failures model} & \multicolumn{4}{|c|}{possible restarts at any moment}\\
+                                & \multicolumn{2}{|c|}{never blocking} & \multicolumn{2}{|c|}{blocking in local section} & \multicolumn{2}{|c|}{never blocking} & \multicolumn{2}{|c|}{blocking in local section} \\
+                                & 312 & 123 & 312 & 123 & 312 & 123 & 312 & 123 \\
+\hline
+(\ref{mutual_exclusion})        & \ok & \xx & \ok & \xx & \ok & \xx & \ok & \xx \\
+\hline
+(\ref{inevitable_anteroom})     & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx \\
+\hline
+(\ref{anteroom_exit})           & \xx & \xx & \xx & \xx & \xx & \xx & \xx & \xx \\
+\hline
+(\ref{liveness})                & \ok & \xx & \ok & \xx & \xx & \xx & \xx & \xx \\
+\hline
+(\ref{linear_wait})             & \ok & \xx & \ok & \xx & \xx & \xx & \xx & \xx \\
+\hline
+(\ref{unbounded_wait})          & \ok & \xx & \ok & \xx & \xx & \xx & \xx & \xx \\
+\hline
+(\ref{anteroom_exit2})          & \ok & \ok & \ok & \ok & \xx & \xx & \xx & \xx \\
 \hline
 \end{tabular}
 \end{center}
@@ -134,7 +158,7 @@ Labels ,,never blocking'' and ,,blocking in local section'' refer to the ability
 
 \subsection*{Results discussion}
 
-\subsubsection*{Failure susceptible model}
+\subsubsection*{Failure susceptible algorithm}
 
 It should be now clear why property (\ref{anteroom_exit2}) is more on par with our intentions -- every permutation of epilogue's assignments that falsifies $\verb+chce[i]+$ before $\verb+we[i]+$, \emph{tricks us} into thinking that process $i$ is in the waiting room, while it is actually leaving critical section.
 This is also an explanation why (\ref{anteroom_exit}) does not hold for assignments permutation $312$ in ,,never blocking'' model, while (\ref{anteroom_exit2}) does.
@@ -145,9 +169,15 @@ If process $\alpha$ proceeds through prologue, critical section and halts betwee
 Even simpler counterexample exists for property (\ref{inevitable_anteroom}) which states that every process must visit waiting room before entering critical section in every turn of the main loop.
 It is easy to verify that if processes enter and leave critical section one after another, without contention, then none of them enters waiting room.
 
-% TODO
+It is highly disturbing that unmodified algorithm does not ensure mutual exclusion in presence of nondeterministic restarts.
+Szymanski's paper \cite{Original} states that the only purpose of the modifications is to ensure liveness and linear wait properties.
+Additional experiments have shown that unmodified algorithm ensures mutual exclusion for two processes, but not for three.
+Minimal counterexample found after simplifying the model (by turning off weak fairness and possibility of process getting stuck in local section) has a total of almost 10000 steps which makes it intractable for analysis.
 
-\subsubsection*{Failure resistant model}
+\subsubsection*{Failure resistant algorithm}
+
+Szymanski's paper \cite{Original} states that correct order of epilogue's assignments is described by permutation $123$, while our analysis shows that not only it does not work for failure resistant algorithm, but also for failure susceptible one.
+Also note that liveness and linear wait properties do not hold when we allow processes to restart.
 
 % TODO
 

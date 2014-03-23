@@ -172,14 +172,28 @@ It is easy to verify that if processes enter and leave critical section one afte
 It is highly disturbing that unmodified algorithm does not ensure mutual exclusion in presence of nondeterministic restarts.
 Szymanski's paper \cite{Original} states that the only purpose of the modifications is to ensure liveness and linear wait properties.
 Additional experiments have shown that unmodified algorithm ensures mutual exclusion for two processes, but not for three.
-Minimal counterexample found after simplifying the model (by turning off weak fairness and possibility of process getting stuck in local section) has a total of almost 10000 steps which makes it intractable for analysis.
+Minimal found counterexample (not necessarily minimal at all) after simplifying the model (by turning off weak fairness and possibility of process getting stuck in local section) has a total of almost 10000 steps which makes it intractable for analysis.
+However, after careful analysis of the algorithm before modification we have determined the scenario, which proves lack of mutual exclusion in presence of restarts.
+The scenario involves three processes and this is the minimal number since we have verified that mutual exclusion for two processes holds even in presence of restarts (which is easy to prove by hand).
+Consider the interlace as follows.
+\begin{itemize}
+    \item process $P(3)$ starts the protocol and halts just before checking a condition to enter the waiting room
+    \item process $P(2)$ executes \verb+chce[i] = true;+
+    \item process $P(3)$ enters the waiting room and hangs on the condition that does not hold at the moment
+    \item process $P(2)$ executes prologue up to the instruction \verb+wy[i] = true;+
+    \item process $P(3)$ passes the waiting condition but stops before \verb+chce[i] = true;+
+    \item process $P(2)$ restarts
+    \item process $P(1)$ executes \verb+chce[i] = true;+ and proceeds through the condition, halts before \verb+we[i] = true;+
+    \item process $P(3)$ executes \verb+chce[i] = true;+ and \emph{enters critical section}
+    \item process $P(1)$ executes rest of the prologue (skipping waiting room) and \emph{enters critical section}
+\end{itemize}
 
 \subsubsection*{Failure resistant algorithm}
 
 Szymanski's paper \cite{Original} states that correct order of epilogue's assignments is described by permutation $123$, while our analysis shows that not only it does not work for failure resistant algorithm, but also for failure susceptible one.
 Also note that liveness and linear wait properties do not hold when we allow processes to restart, which contradicts thesis of the paper.
 
-\subsection*{Technical (implementation) details and reasoning}
+\subsection*{Technical (implementation) details}
 
 There are just a few caveats in the models implementations, we would like to cover in more details.
 
@@ -189,7 +203,7 @@ This way all negative results (e.g. property $A$ does not hold) are rock-solid, 
 Second, since we model process failures in such a way that resetting process forgets its internal state (local variables and instruction pointer), there is no difference between failing at instruction $\alpha$ or instruction $\beta$, as long as there is no write to global variable between them.
 This leads to another simplification: we can nondeterministically fail after each global write, yet still cover all possible executions of real-world algorithm, which can fail at any moment.
 
-Each model comes with \verb+./verifier+ script, which allows for much broader customisation of the algorithm and environment model than the one described in this report, details and examples can be found in attached \verb+README.md+ file.
+Each model comes with \verb+./verify+ script, which allows for much broader customisation of the algorithm and environment model than the one described in this report, details and examples can be found in attached \verb+README.md+ file.
 
 \subsection*{Final remarks}
 

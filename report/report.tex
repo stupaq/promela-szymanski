@@ -36,7 +36,7 @@ Note that pairs of operators $\forall$ and $\always$ as well as $\exists$ and $\
 \subsubsection*{Waiting room exit}
 
 \begin{equation}
-\always \forall_i (\exists_j (\verb+we[i] && !chce[i]+ \implies i \neq j \land \verb+wy[j]+)) \label{anteroom_exit}
+\always \forall_i (\exists_j (\verb+we[i] && !chce[i]+ \implies i \neq j \land \eventually \verb+wy[j]+)) \label{anteroom_exit}
 \end{equation}
 
 \subsubsection*{Liveness}
@@ -81,7 +81,7 @@ For this reason we have proposed more accurate (based on process' instruction po
 Improved definition is being used in the LTL formulation of property (\ref{anteroom_exit2}).
 
 \begin{equation}
-\always \forall_i (\exists_j (\verb+P[i]@in_anteroom+ \implies i \neq j \land \verb+wy[j]+))
+\always \forall_i (\exists_j (\verb+P[i]@in_anteroom+ \implies i \neq j \land \eventually \verb+wy[j]+))
 \label{anteroom_exit2}
 \end{equation}
 
